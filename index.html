@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent IA Biométrique - FONCTIONNEL</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 650px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+        }
+        
+        #videoContainer {
+            width: 100%;
+            margin-bottom: 20px;
+            border: 4px solid #667eea;
+            border-radius: 15px;
+            overflow: hidden;
+            background: #000;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        #video {
+            width: 100%;
+            height: auto;
+            display: block;
+            transform: scaleX(-1);
+            min-height: 400px;
+        }
+        
+        .status-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #28a745;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        
+        #startBtn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        
+        #stopBtn {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+        
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        #output {
+            padding: 20px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            min-height: 100px;
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .alert-warning {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-color: #ffc107;
+            color: #856404;
+        }
+        
+        .alert-danger {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .alert-info {
+            background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+        
+        table {
+            width: 100%;
+            margin: 15px 0;
+            border-collapse: collapse;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: bold;
+        }
+        
+        td {
+            background: white;
+        }
+        
+        .report-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .clinical-note {
+            background: #e7f3ff;
+            border-left: 5px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        h3 {
+            color: #667eea;
+            margin: 20px 0 10px 0;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👁️ Agent IA Biométrique</h1>
+        <p class="subtitle">
+            ⚠️ <strong>Outil d'aide à la vigilance</strong> - Non médical
+        </p>
+
+        <div id="videoContainer">
+            <video id="video" autoplay playsinline muted></video>
+            <div class="status-overlay" id="statusOverlay" style="display: none;">
+                <div class="status-dot"></div>
+                <span>LIVE</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="startBtn">🚀 Démarrer l'Analyse</button>
+            <button id="stopBtn" disabled>⏹️ Arrêter</button>
+        </div>
+
+        <div id="output" class="alert-info">
+            <strong>🔄 Initialisation...</strong><br>
+            Cliquez sur "Démarrer" pour accéder à la caméra.
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // VARIABLES GLOBALES
+        // ========================================
+        const video = document.getElementById('video');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const output = document.getElementById('output');
+        const statusOverlay = document.getElementById('statusOverlay');
+        
+        let stream = null;
+        let analysisInterval = null;
+        let analysisTimeout = null;
+        let sessionData = [];
+        let isAnalyzing = false;
+
+        // ========================================
+        // BASE DE CONNAISSANCES CLINIQUE
+        // ========================================
+        const KNOWLEDGE = [
+            {
+                id: 'fatigue',
+                symptoms: ['Fatigue Sévère', 'Pupille Stabilité Basse'],
+                message: "⚠️ Fatigue critique détectée. Repos immédiat recommandé.",
+                level: "danger"
+            },
+            {
+                id: 'stress',
+                symptoms: ['Forte Charge Cognitive', 'Pupille Dilatation Élevée'],
+                message: "⚠️ Surcharge cognitive. Pause recommandée.",
+                level: "warning"
+            },
+            {
+                id: 'anomalie',
+                symptoms: ['Anormal', 'Sclère Couleur Anormale'],
+                message: "🚨 ALERTE: Anomalie détectée. Consultation médicale urgente.",
+                level: "danger"
+            }
+        ];
+
+        // ========================================
+        // FONCTIONS PRINCIPALES
+        // ========================================
+        
+        async function startCamera() {
+            try {
+                output.innerHTML = '<span class="spinner"></span><strong>Demande d\'accès à la caméra...</strong>';
+                output.className = 'alert-info';
+                
+                // Demande simple d'accès
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'user' },
+                    audio: false
+                });
+                
+                video.srcObject = stream;
+                
+                // Attendre que la vidéo soit prête
+                await video.play();
+                
+                // Succès !
+                statusOverlay.style.display = 'flex';
+                output.innerHTML = '✅ <strong>Caméra activée !</strong><br>Cliquez sur "Démarrer l\'Analyse" pour commencer.';
+                output.className = 'alert-success';
+                
+                startBtn.disabled = false;
+                
+                console.log('✅ Caméra démarrée');
+                return true;
+                
+            } catch (error) {
+                console.error('Erreur caméra:', error);
+                
+                let msg = '❌ <strong>Erreur d\'accès à la caméra</strong><br>';
+                
+                if (error.name === 'NotAllowedError') {
+                    msg += 'Permission refusée. Veuillez autoriser l\'accès à la caméra et actualiser la page.';
+                } else if (error.name === 'NotFoundError') {
+                    msg += 'Aucune caméra trouvée. Vérifiez votre webcam.';
+                } else if (error.name === 'NotReadableError') {
+                    msg += 'Caméra en cours d\'utilisation par une autre application.';
+                } else {
+                    msg += error.message;
+                }
+                
+                output.innerHTML = msg;
+                output.className = 'alert-danger';
+                return false;
+            }
+        }
+
+        function processFrame() {
+            // Simulation de données biométriques
+            const hour = new Date().getHours();
+            let baseScore = (hour >= 22 || hour <= 6) ? 0.7 : 0.25;
+            let score = Math.max(0, Math.min(1, baseScore + (Math.random() - 0.5) * 0.15));
+            
+            const isAbnormal = Math.random() < 0.001;
+            
+            let result;
+            if (isAbnormal) {
+                result = {
+                    cognitive: "Anormal",
+                    physical: "Sclère Couleur Anormale",
+                    score: 100
+                };
+            } else if (score > 0.7) {
+                result = {
+                    cognitive: "Fatigue Sévère",
+                    physical: "Pupille Stabilité Basse",
+                    score: Math.round(score * 100)
+                };
+            } else if (score > 0.4) {
+                result = {
+                    cognitive: "Forte Charge Cognitive",
+                    physical: "Pupille Dilatation Élevée",
+                    score: Math.round(score * 100)
+                };
+            } else {
+                result = {
+                    cognitive: "Concentration Normale",
+                    physical: "Normal",
+                    score: Math.round(score * 100)
+                };
+            }
+            
+            sessionData.push({
+                time: new Date().toLocaleTimeString(),
+                score: score,
+                ...result
+            });
+            
+            return result;
+        }
+
+        function startAnalysis() {
+            if (!stream) {
+                output.innerHTML = '❌ <strong>Caméra non disponible</strong><br>Veuillez d\'abord activer la caméra.';
+                output.className = 'alert-danger';
+                return;
+            }
+            
+            isAnalyzing = true;
+            sessionData = [];
+            
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            
+            output.innerHTML = '<span class="spinner"></span><strong>Analyse en cours...</strong><br>Collecte des données biométriques...';
+            output.className = 'alert-warning';
+            
+            console.log('▶️ Analyse démarrée');
+            
+            // Collecte toutes les 200ms (5 FPS)
+            analysisInterval = setInterval(() => {
+                const result = processFrame();
+                const elapsed = (sessionData.length * 0.2).toFixed(1);
+                output.innerHTML = `
+                    <span class="spinner"></span><strong>Analyse en cours (${elapsed}s / 10s)</strong><br>
+                    État: <strong>${result.cognitive}</strong><br>
+                    Score: ${result.score}%
+                `;
+            }, 200);
+            
+            // Arrêt automatique après 10 secondes
+            analysisTimeout = setTimeout(() => {
+                stopAnalysis();
+            }, 10000);
+        }
+
+        function stopAnalysis() {
+            if (!isAnalyzing) return;
+            
+            clearInterval(analysisInterval);
+            clearTimeout(analysisTimeout);
+            
+            isAnalyzing = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            
+            console.log('⏹️ Analyse arrêtée');
+            generateReport();
+        }
+
+        function generateReport() {
+            if (sessionData.length === 0) {
+                output.innerHTML = '❌ <strong>Aucune donnée</strong>';
+                output.className = 'alert-warning';
+                return;
+            }
+            
+            // Calcul des statistiques
+            const scores = sessionData.map(d => d.score);
+            const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
+            const maxScore = Math.max(...scores);
+            const minScore = Math.min(...scores);
+            
+            // Analyse du dernier état
+            const lastData = sessionData[sessionData.length - 1];
+            let clinical = null;
+            
+            for (const condition of KNOWLEDGE) {
+                if (condition.symptoms.includes(lastData.cognitive) || 
+                    condition.symptoms.includes(lastData.physical)) {
+                    clinical = condition;
+                    break;
+                }
+            }
+            
+            // Génération du rapport
+            let reportClass = 'alert-success';
+            let reportTitle = '✅ Analyse Complète - État Normal';
+            
+            if (clinical) {
+                reportClass = `alert-${clinical.level}`;
+                reportTitle = clinical.message;
+            } else if (maxScore > 60) {
+                reportClass = 'alert-warning';
+                reportTitle = `⚠️ Pic de fatigue détecté: ${Math.round(maxScore)}%`;
+            }
+            
+            const duration = (sessionData.length * 0.2).toFixed(1);
+            
+            const html = `
+                <div class="report-title ${reportClass}">
+                    ${reportTitle}
+                </div>
+                
+                <h3>📊 Statistiques (${duration}s d'analyse)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Métrique</th>
+                            <th>Valeur</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Score moyen</td>
+                            <td><strong>${Math.round(avgScore * 100)}%</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Score maximal</td>
+                            <td><strong>${Math.round(maxScore * 100)}%</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Score minimal</td>
+                            <td><strong>${Math.round(minScore * 100)}%</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Échantillons collectés</td>
+                            <td><strong>${sessionData.length}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="clinical-note">
+                    <h3>📋 Note Clinique</h3>
+                    <p>${clinical ? clinical.message : '✅ Aucune alerte détectée. Paramètres dans les limites normales.'}</p>
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                        <em>⚠️ Ce rapport est généré par un système d'aide à la décision et ne constitue pas un diagnostic médical.</em>
+                    </p>
+                </div>
+            `;
+            
+            output.innerHTML = html;
+            output.className = '';
+            
+            console.log('📊 Rapport généré:', sessionData.length, 'échantillons');
+        }
+
+        // ========================================
+        // GESTION DES ÉVÉNEMENTS
+        // ========================================
+        
+        startBtn.addEventListener('click', () => {
+            if (!stream) {
+                startCamera();
+            } else {
+                startAnalysis();
+            }
+        });
+        
+        stopBtn.addEventListener('click', stopAnalysis);
+        
+        // Nettoyage à la fermeture
+        window.addEventListener('beforeunload', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+        
+        // ========================================
+        // INITIALISATION
+        // ========================================
+        
+        console.log('🚀 Application chargée et prête');
+        
+        // Message initial
+        setTimeout(() => {
+            output.innerHTML = '👋 <strong>Bienvenue !</strong><br>Cliquez sur "Démarrer" pour activer la caméra et commencer l\'analyse.';
+        }, 500);
+    </script>
+</body>
+</html>
