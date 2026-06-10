@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<meta name="theme-color" content="#050a0d">
+<meta name="description" content="Agent Biométrique — suivi de biomarqueurs et signaux physiologiques · Studio Niko Design">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Agent IA Biométrique - FONCTIONNEL</title>
     
     <style>
@@ -222,6 +224,10 @@
             100% { transform: rotate(360deg); }
         }
     </style>
+
+<style>/* iOS safe-area · Studio Niko */body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);}html{min-height:100dvh;}</style>
+
+<link rel="manifest" href="manifest.json">
 </head>
 <body>
     <div class="container">
@@ -552,5 +558,7 @@
             output.innerHTML = '👋 <strong>Bienvenue !</strong><br>Cliquez sur "Démarrer" pour activer la caméra et commencer l\'analyse.';
         }, 500);
     </script>
+
+<footer style="margin-top:24px;padding:14px 16px;background:#0a1418;border-top:1px solid #00ff9d33;color:#9fb4ba;font-size:12px;line-height:1.5;text-align:center;">⚠️ Cet outil est fourni à titre informatif et de suivi personnel. Il ne remplace pas l'avis, le diagnostic ou le traitement d'un professionnel de santé. En cas d'urgence, appelez le 15 (SAMU) ou le 112.</footer>
 </body>
 </html>
