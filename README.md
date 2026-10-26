@@ -1,4 +1,11 @@
 # 🧬 Agent Biométrique
+
+## Ce que fait l'application, en pratique
+
+Cette interface propose de **démarrer ou arrêter une session d'analyse biométrique**, d'afficher des statistiques de session et de consulter une **note clinique de démonstration**. Elle sert à explorer la présentation d'indicateurs et de résultats d'IA dans un tableau de bord web, pas à produire des mesures médicales certifiées.
+
+**Statut :** prototype de santé expérimental ; les interprétations doivent être vérifiées et ne doivent jamais être utilisées pour diagnostiquer ou traiter une personne.
+
 **Studio Niko Design** — Agent IA d'analyse biométrique santé.
 
 ## ✨ Fonctionnalités
