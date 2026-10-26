@@ -12,3 +12,17 @@
 ## 👤 Auteur
 **Nicolas Julienne** — [Studio Niko Design](https://github.com/Nikoju1977) · Candidat BPI France
 📧 nicolasjulienne.nj@gmail.com
+
+---
+
+## Utilisation, périmètre et maturité
+
+**Thème :** HealthTech — expérimentation d'analyse biométrique.
+
+Le dépôt contient une interface web (`index.html`) accompagnée d'une icône et d'un manifeste. Pour une inspection locale, servir la racine du dépôt avec `python3 -m http.server 8000`, puis ouvrir http://localhost:8000/. Les services d'IA ou ressources distantes peuvent nécessiter un accès réseau et une configuration propre à l'application.
+
+**Limites :** projet exploratoire ; ni diagnostic ni interprétation clinique validée. Ne pas saisir de données de patients réels sans évaluation préalable de la confidentialité, de la sécurité et des flux réseau. Les capacités annoncées ci-dessus n'ont pas fait l'objet d'une validation médicale indépendante.
+
+**État de validation :** documentation actualisée à partir de la structure du dépôt ; aucun test d'exécution, contrôle de sécurité ou audit réglementaire n'est revendiqué.
+
+[Voir les autres projets Studio Niko Design](https://github.com/Nikoju1977).
