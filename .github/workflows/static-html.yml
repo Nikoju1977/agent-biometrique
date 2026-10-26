@@ -29,7 +29,7 @@ jobs:
           for description, pattern in checks.items():
               if not re.search(pattern, html, re.IGNORECASE):
                   raise SystemExit(f"Missing {description} in index.html")
-          if any(marker in html for marker in ("<<<<<<< HEAD", "=======", ">>>>>>> main")):
+          if re.search(r"^(?:<<<<<<< |=======\\s*$|>>>>>>> )", html, re.MULTILINE):
               raise SystemExit("Possible unresolved merge conflict in index.html")
           print("Static HTML entrypoint verified. Runtime behavior is not tested.")
           PY
