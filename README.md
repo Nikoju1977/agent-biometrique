@@ -1,51 +1,25 @@
-# Agent biométrique — démonstrateur d'interface · Studio Niko Design
+# Agent biométrique — aperçu caméra · Studio Niko Design
 
-**Synthetic session dashboard · Camera preview · No measured biometrics**
+**Camera preview only · No measured biometrics**
 
-> **Avertissement critique : les scores, états et alertes de cette version sont simulés.** Ils ne sont pas déduits des images de la caméra. Ne pas utiliser pour évaluer la fatigue, l'état cognitif, la santé, la conduite, la sécurité au travail, le diagnostic ou un traitement.
+## État actuel — correction P0
 
-## Architecture constatée
+Le [commit source](https://github.com/Nikoju1977/agent-biometrique/commit/7d94d7666ac1ec8c98f4256d689639c49996688e) retire les scores aléatoires, rapports et alertes fictives. Seul l'aperçu caméra facultatif est conservé. L'arrêt explicite, le changement de visibilité et la sortie de page arrêtent les pistes ; une demande devenue obsolète ne doit pas réactiver la caméra.
 
 ```mermaid
-flowchart TD
- Cam[Optional camera permission] --> Preview[Video preview only]
- Clock[Local clock] --> Demo[Synthetic random session values]
- Random[Math.random] --> Demo
- Demo --> Summary[Illustrative session report]
+flowchart LR
+ Consent[Explicit permission] --> Preview[Local camera preview]
+ Preview --> Stop[Stop or page hidden]
 ```
 
-| Fonction de [index.html](index.html) | Comportement réel |
-| --- | --- |
-| `startCamera` | Demande l'accès à la caméra et affiche la vidéo |
-| `processFrame` | Produit des états fictifs à partir de l'heure et de valeurs aléatoires, sans lecture des pixels |
-| `startAnalysis` | Planifie les échantillons fictifs toutes les 200 ms, arrêt prévu après dix secondes |
-| `generateReport` | Calcule les statistiques des scores simulés et sélectionne des textes prédéfinis |
-
-Aucun moteur de mesure biométrique, suivi longitudinal clinique, appel Mistral, graphique Chart.js opérationnel ni coffre AES-256-GCM n'a été établi dans le fichier principal inspecté. Les intitulés de l'interface peuvent donner une impression trompeuse de mesure réelle : cette révision du README ne modifie pas l'interface.
-
-## Priorité critique avant toute démonstration
-
-- Identifier visiblement chaque valeur et rapport comme fictifs, supprimer les formulations cliniques trompeuses et désactiver toute alerte présentée comme réelle.
-- Dissocier la simulation de la caméra ; ne demander une permission que lorsqu'elle est nécessaire et vérifier l'arrêt des pistes.
-- Vérifier les états de session et l'absence de données médicales ou d'images conservées ou transmises.
-- Ne pas présenter de futur moteur de mesure comme opérationnel sans validation appropriée.
-
-Ces actions restent proposées et non implémentées. Aucun test d'exécution, essai caméra, audit de confidentialité ou validation clinique n'a été réalisé ici.
-
-## Consultation locale
-
-```bash
-python3 -m http.server 8000
-```
-
-Ouvrir http://localhost:8000/ pour examiner l'interface. Ne pas utiliser de données de santé réelles ni de caméra pour une évaluation biométrique.
+Aucune mesure de santé ni décision de vigilance. Aucun nouveau test navigateur, audit réseau ou validation clinique exécuté. La qualification des permissions et du cycle de vie reste nécessaire.
 
 ## English overview
 
-This project is a synthetic dashboard demonstration, not a biometric analysis engine. The camera is a preview; scores are produced from clock-based rules and random values rather than image measurements. Reports summarize simulated data and must not be used for health or safety decisions. Previously advertised AI, longitudinal tracking and encryption were not established in the inspected main file. No runtime or clinical validation was performed.
+Camera-preview demonstrator only. Synthetic scores and clinical-looking reports have been removed from the source. Camera lifecycle is guarded against stale requests; runtime behavior remains unverified.
 
-## Licence
+[Notice de droits](LICENSE.md).
 
-[Notice de droits](LICENSE.md) · Contributions originales concernées : droits réservés. Aucun changement de licence.
+## Historique
 
-[Studio Niko Design](https://github.com/Nikoju1977).
+Les constats antérieurs sont conservés dans l'historique Git du README. Les licences existantes restent inchangées.
