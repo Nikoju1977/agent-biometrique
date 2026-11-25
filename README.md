@@ -1,35 +1,51 @@
-# 🧬 Agent Biométrique
+# Agent biométrique — démonstrateur d'interface · Studio Niko Design
 
-## Ce que fait l'application, en pratique
+**Synthetic session dashboard · Camera preview · No measured biometrics**
 
-Cette interface propose de **démarrer ou arrêter une session d'analyse biométrique**, d'afficher des statistiques de session et de consulter une **note clinique de démonstration**. Elle sert à explorer la présentation d'indicateurs et de résultats d'IA dans un tableau de bord web, pas à produire des mesures médicales certifiées.
+> **Avertissement critique : les scores, états et alertes de cette version sont simulés.** Ils ne sont pas déduits des images de la caméra. Ne pas utiliser pour évaluer la fatigue, l'état cognitif, la santé, la conduite, la sécurité au travail, le diagnostic ou un traitement.
 
-**Statut :** prototype de santé expérimental ; les interprétations doivent être vérifiées et ne doivent jamais être utilisées pour diagnostiquer ou traiter une personne.
+## Architecture constatée
 
-**Studio Niko Design** — Agent IA d'analyse biométrique santé.
+```mermaid
+flowchart TD
+ Cam[Optional camera permission] --> Preview[Video preview only]
+ Clock[Local clock] --> Demo[Synthetic random session values]
+ Random[Math.random] --> Demo
+ Demo --> Summary[Illustrative session report]
+```
 
-## ✨ Fonctionnalités
-- Analyse biométrique multi-paramètres
-- Suivi longitudinal des données santé
-- Alertes et recommandations IA personnalisées
+| Fonction de [index.html](index.html) | Comportement réel |
+| --- | --- |
+| `startCamera` | Demande l'accès à la caméra et affiche la vidéo |
+| `processFrame` | Produit des états fictifs à partir de l'heure et de valeurs aléatoires, sans lecture des pixels |
+| `startAnalysis` | Planifie les échantillons fictifs toutes les 200 ms, arrêt prévu après dix secondes |
+| `generateReport` | Calcule les statistiques des scores simulés et sélectionne des textes prédéfinis |
 
-## 🛠 Stack
-`HTML` · `Mistral AI` · `Chart.js` · `AES-256-GCM`
+Aucun moteur de mesure biométrique, suivi longitudinal clinique, appel Mistral, graphique Chart.js opérationnel ni coffre AES-256-GCM n'a été établi dans le fichier principal inspecté. Les intitulés de l'interface peuvent donner une impression trompeuse de mesure réelle : cette révision du README ne modifie pas l'interface.
 
-## 👤 Auteur
-**Nicolas Julienne** — [Studio Niko Design](https://github.com/Nikoju1977) · Candidat BPI France
-📧 nicolasjulienne.nj@gmail.com
+## Priorité critique avant toute démonstration
 
----
+- Identifier visiblement chaque valeur et rapport comme fictifs, supprimer les formulations cliniques trompeuses et désactiver toute alerte présentée comme réelle.
+- Dissocier la simulation de la caméra ; ne demander une permission que lorsqu'elle est nécessaire et vérifier l'arrêt des pistes.
+- Vérifier les états de session et l'absence de données médicales ou d'images conservées ou transmises.
+- Ne pas présenter de futur moteur de mesure comme opérationnel sans validation appropriée.
 
-## Utilisation, périmètre et maturité
+Ces actions restent proposées et non implémentées. Aucun test d'exécution, essai caméra, audit de confidentialité ou validation clinique n'a été réalisé ici.
 
-**Thème :** HealthTech — expérimentation d'analyse biométrique.
+## Consultation locale
 
-Le dépôt contient une interface web (`index.html`) accompagnée d'une icône et d'un manifeste. Pour une inspection locale, servir la racine du dépôt avec `python3 -m http.server 8000`, puis ouvrir http://localhost:8000/. Les services d'IA ou ressources distantes peuvent nécessiter un accès réseau et une configuration propre à l'application.
+```bash
+python3 -m http.server 8000
+```
 
-**Limites :** projet exploratoire ; ni diagnostic ni interprétation clinique validée. Ne pas saisir de données de patients réels sans évaluation préalable de la confidentialité, de la sécurité et des flux réseau. Les capacités annoncées ci-dessus n'ont pas fait l'objet d'une validation médicale indépendante.
+Ouvrir http://localhost:8000/ pour examiner l'interface. Ne pas utiliser de données de santé réelles ni de caméra pour une évaluation biométrique.
 
-**État de validation :** documentation actualisée à partir de la structure du dépôt ; aucun test d'exécution, contrôle de sécurité ou audit réglementaire n'est revendiqué.
+## English overview
 
-[Voir les autres projets Studio Niko Design](https://github.com/Nikoju1977).
+This project is a synthetic dashboard demonstration, not a biometric analysis engine. The camera is a preview; scores are produced from clock-based rules and random values rather than image measurements. Reports summarize simulated data and must not be used for health or safety decisions. Previously advertised AI, longitudinal tracking and encryption were not established in the inspected main file. No runtime or clinical validation was performed.
+
+## Licence
+
+[Notice de droits](LICENSE.md) · Contributions originales concernées : droits réservés. Aucun changement de licence.
+
+[Studio Niko Design](https://github.com/Nikoju1977).
